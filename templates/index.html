@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        </style>
+        <style>
+            textarea {
+                transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            }
+            
+            textarea:hover, textarea:focus {
+                box-shadow: 0 0 5px rgba(31, 42, 68, 0.5);
+                border-color: #1F2A44;
+            }
+            
+            input[type="submit"] {
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+            
+            input[type="submit"]:hover {
+                background-color: #273352;
+                transform: translateY(-2px);
+            }
+            </style>
+            
+        
+    <meta charset="UTF-8">
+    <title>Vantage: Personalized Interview Coaching</title>
+</head>
+<body style="margin: 0; font-family: 'Open Sans', sans-serif; background-color: #F9FAFB; color: #1F2A44;">
+    <!-- Hero Section -->
+    <div style="background: linear-gradient(135deg, #1F2A44 0%, #273352 100%); color: white; text-align: center; padding: 30px 20px; position: relative;">
+    <img src="{{ url_for('static', filename='images/vantage_logo.png') }}" alt="Vantage Logo" 
+     style="height: 85px; position: absolute; top: 20px; left: 30px;">
+    <h1 style="margin: 0; font-size: 2.5em;">Meet A.D. Vantage</h1>
+    <p style="margin-top: 10px; font-size: 1.2em;">Personalized Interview Coaching</p>
+    <hr style="border: none; height: 1px; background-color: #e5e7eb; margin: 0;">
+</div>
+
+{% if submitted and ai_response %}
+<div id="submitted-marker" style="display: none;"></div>
+{% endif %}
+
+
+    <!-- Main Content Section -->
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px; padding: 0 20px;">
+
+        <!-- Form Card -->
+        <div style="background: white; padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); max-width: 600px; width: 100%; margin-bottom: 30px;">
+            <h2 style="margin-top: 0; text-align: center;">Prepare Smarter with A.D. Vantage</h2>
+            <form method="POST" onsubmit="showLoading()" style="display: flex; flex-direction: column;">
+                <label for="job_description" style="margin-bottom: 5px;">First, provide the job posting details:</label>
+                <textarea id="job_description" name="job_description" rows="8" required style="margin-bottom: 20px; padding: 10px; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+
+                <label for="interview_question" style="margin-bottom: 5px;">Now, what's on your mind?</label>
+                <textarea id="interview_question" name="interview_question" rows="4" required style="margin-bottom: 20px; padding: 10px; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+
+                <input type="submit" value="Prepare Me" 
+style="
+    background-color: #1F2A44; 
+    color: white; 
+    border: none; 
+    padding: 12px 20px; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 1em;
+    transition: all 0.3s ease;
+"
+onmouseover="this.style.backgroundColor='#162034'; this.style.transform='scale(1.03)';" 
+onmouseout="this.style.backgroundColor='#1F2A44'; this.style.transform='scale(1)';"
+>
+
+            </form>
+        </div>
+
+        <div id="loading" style="display: none; text-align: center; margin-top: 20px;">
+            <p style="font-size: 1.2em;">A.D. Vantage is preparing your insights...</p>
+            <div style="border: 4px solid #f3f3f3; border-top: 4px solid #1F2A44; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+        </div>
+        
+
+        <!-- AI Response Card -->
+{% if submitted and ai_response %}
+<div id="ai-response" style="background: white; padding: 30px 40px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); max-width: 600px; width: 100%; margin-bottom: 30px; animation: fadeIn 1s ease;">
+
+    {% if last_question %}
+    <p style="font-size: 0.95em; color: #6b7280; margin-bottom: 15px;">
+        <em>You asked:</em> "{{ last_question }}"
+    </p>
+    {% endif %}
+
+    <h2 style="margin-top: 0; text-align: center;">Vantage Thinks:</h2>
+    <p style="white-space: pre-wrap;">{{ ai_response }}</p>
+
+</div>
+{% endif %}
+
+        <!-- Error Message -->
+        {% if error_message %}
+        <div style="color: red; margin-top: 20px; text-align: center;">
+            <strong>Error:</strong> {{ error_message }}
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if submitted %}
+<div style="height: 400px;"></div>
+{% endif %}
+
+
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+        </script>
+    
+    <script>
+        window.onload = function() {
+            const marker = document.getElementById('submitted-marker');
+            if (marker) {
+                const aiResponse = document.getElementById('ai-response');
+                if (aiResponse) {
+                    const offset = aiResponse.offsetTop - 30;  // scroll to 50px above the card
+                    window.scrollTo({ top: offset, behavior: 'smooth' });
+                }
+            }
+        };
+        </script>
+        
+        
+        
+        
+        <footer style="text-align: center; padding: 20px; font-size: 0.85em; color: #6b7280;">
+            Built by Mason Morris // 2025
+        </footer>
+        
+
+</body>
+
+</html>
